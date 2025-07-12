@@ -1,0 +1,1 @@
+{"root":["./generated/client.d.ts","./generated/default.d.ts","./generated/edge.d.ts","./generated/index.d.ts","./generated/wasm.d.ts","./generated/runtime/index-browser.d.ts","./generated/runtime/library.d.ts","./src/db.ts","./src/gemini.ts","./src/index.ts","./src/router.ts","./src/prisma/seed.ts"],"version":"5.8.3"}
