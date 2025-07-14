@@ -3,11 +3,19 @@ import axios from 'axios';
 import { JSDOM } from 'jsdom';
 import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import Redis from 'ioredis';
+import { createClient } from 'redis';
 
 const app = express();
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'YOUR_GEMINI_KEY_HERE';
-const redis = new Redis({ host: 'redis', port: 6379 });
+
+const redis = createClient({
+    username: 'default',
+    password: 'eQvXvSHHASayp4owrToBlOLaeDcLKT3d',
+    socket: {
+        host: 'redis-10791.crce182.ap-south-1-1.ec2.redns.redis-cloud.com',
+        port: 10791
+    }
+});
 
 app.use(cors());
 
@@ -146,7 +154,7 @@ const summarizeReviews = async (reviews: string[]) => {
 
 app.get('/search', async (req, res) => {
   const {product} = req.body;
-  
+
   if (!product) return res.status(400).json({ error: 'Missing product parameter' });
 
   const cacheKey = `reviews:${product.toLowerCase()}`;
@@ -166,7 +174,7 @@ app.get('/search', async (req, res) => {
   const summary = await summarizeReviews(reviewTexts);
 
   const response = { product, summary, reviews: allReviews, officialLinks };
-  await redis.set(cacheKey, JSON.stringify(response), 'EX', 3600); // Cache for 1 hour
+  await redis.set(cacheKey, JSON.stringify(response), { EX: 3600 }); // Cache for 1 hour
 
   return res.json(response);
 });
