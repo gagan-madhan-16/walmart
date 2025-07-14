@@ -1,7 +1,7 @@
 import express from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "./db";
-import { Category, AisleFace } from "../generated";
+import { AisleFace } from "../generated";
 
 // Interface for product structure
 interface Product {
@@ -145,63 +145,20 @@ router.post("/list", async (req, res) => {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
 
     // Available items for classification
-    const food_and_fmcg = await db.product.findMany({
-        select:{
-            name:true,
-            id:true
-        },
-        where:{
-            isAvailable:true,
-            category:Category.FOOD_AND_FMCG
-        }
+    const products = await db.product.findMany({
+      select: {
+        id: true,
+        name: true
+      },
+      where: { isAvailable: true }
     });
-
-    const stationery = await db.product.findMany({
-        select:{
-            name:true,
-            id:true
-        },
-        where:{
-            isAvailable:true,
-            category:Category.STATIONERY
-        }
-    });
-
-    const hardware = await db.product.findMany({
-        select:{
-            name:true,
-            id:true
-        },
-        where:{
-            isAvailable:true,
-            category:Category.HARDWARE
-        }
-    });
-
-    const electronics_and_electrical_equipment = await db.product.findMany({
-        select:{
-            name:true,
-            id:true
-        },
-        where:{
-            isAvailable:true,
-            category:Category.ELECTRONICS_AND_ELECTRICAL_EQUIPMENT
-        }
-    });
-
-    const availableItems = {
-        food_and_fmcg: food_and_fmcg, 
-        stationery: stationery, 
-        hardware: hardware, 
-        electronics_and_electrical_equipment: electronics_and_electrical_equipment 
-    }
 
     const response = await model.generateContent({
       contents: [{
         role: "user",
         parts: [
           { text: `User said: "${text}"` },
-          { text: `Available items with their IDs: ${JSON.stringify(availableItems)}` },
+          { text: `Available items with their IDs: ${JSON.stringify(products)}` },
           { text: `IMPORTANT: You must ONLY select products from the available items list above. Match the user's intent to existing products and return their exact names and IDs.` },
           { text: `If the user wants "chocolate cake", look for similar items like "cake", "chocolate", "dessert" etc. in the food_and_fmcg category.` },
           { text: `If the user wants "graphics card", look for "GPU", "graphics card" etc. in the electronics_and_electrical_equipment category.` },

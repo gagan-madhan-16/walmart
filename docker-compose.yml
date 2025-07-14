@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Main application
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=Development
+      - PORT=5000
+      - DATABASE_URL=postgresql://neondb_owner:npg_9rlw3DOVBSTj@ep-round-firefly-a1s5s0s4-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      - GEMINI_API_KEY=AIzaSyA_1fKFhogyLYuzdqoH-sD-tky95ioJu_8
+    depends_on:
+      - redis
+    volumes:
+      - ./generated:/app/generated  # Mount generated Prisma client
+    networks:
+      - walmart-network
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - walmart-network
+
+volumes:
+  redis_data:
+
+networks:
+  walmart-network:
+    driver: bridge
