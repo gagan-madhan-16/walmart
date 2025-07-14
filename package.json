@@ -7,7 +7,7 @@
     "build": "tsc -b",
     "start": "node dist/index.js",
     "dev": "tsc -b && node dist/index.js",
-    "deploy": "cd src && npx prisma db push && npx prisma generate && npx tsx prisma/seed.ts && cd.. && tsc -b && node dist/index.js",
+    "deploy": "cd src && npx prisma db push && npx prisma generate && cd .. && tsc -b && node dist/index.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
