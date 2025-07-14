@@ -63,7 +63,9 @@ async function retryForCorrectFormat(model: any, originalText: string, incorrect
             { text: JSON.stringify({ 
                 products:[{
                     name: "exact name from available items",
-                    id: "exact id from available items"
+                    id: "exact id from available items",
+                    price: "exactly as given as an input",
+                    productUrl: "exactly as given as an input"
                 }]
             }) },
             { text: `IMPORTANT: Only use products that actually exist in the database. Do NOT create new product names or leave IDs empty.` },
@@ -168,7 +170,9 @@ router.post("/list", async (req, res) => {
           { text: JSON.stringify({
             products:[{
                 name: "exact name from available items",
-                id: "exact id from available items"
+                id: "exact id from available items",
+                price: "exactly as given as an input",
+                productUrl: "exactly as given as an input"
             }]
           }) },
           { text: `Do NOT create new product names. Only use products that exist in the available items list.` }
