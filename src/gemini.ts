@@ -210,8 +210,8 @@ router.post("/list", async (req, res) => {
       result = await retryForCorrectFormat(model, text, geminiResponse);
     }
 
-    // Final validation: Check if returned products actually exist in database
-    const validProducts = [];
+    // Final validation: Check if returned products actually exist in database and select required fields
+    const validProducts: Array<{ id: string; name: string; price: number; productUrl: string }> = [];
     for (const product of result.products) {
       const dbProduct = await db.product.findFirst({
         where: {
@@ -221,10 +221,11 @@ router.post("/list", async (req, res) => {
         },
         select: {
           id: true,
-          name: true
+          name: true,
+          price: true,
+          productUrl: true
         }
       });
-      
       if (dbProduct) {
         validProducts.push(dbProduct);
       } else {
@@ -249,7 +250,6 @@ router.post("/list", async (req, res) => {
                 productId: validProducts[i].id
             }
         });
-        
         if (address) {
             ProductAddresses.push(address);
         }
