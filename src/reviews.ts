@@ -46,7 +46,7 @@ const scrapeAmazonReviews = async (product: string) => {
     const productDOM = new JSDOM(productPage.data);
     const reviewElements = productDOM.window.document.querySelectorAll('div[data-hook="review"]');
 
-    const reviews = Array.from(reviewElements).map((el) => {
+    const reviews = Array.from(reviewElements).map((el: Element) => {
       const rating = el.querySelector('[data-hook="review-star-rating"] span')?.textContent;
       const title = el.querySelector('[data-hook="review-title"] span')?.textContent;
       const review = el.querySelector('[data-hook="review-body"] span')?.textContent;
@@ -79,7 +79,7 @@ const scrapeFlipkartReviews = async (product: string) => {
     const productDOM = new JSDOM(productPage.data);
     const reviewElements = productDOM.window.document.querySelectorAll('div._27M-vq');
 
-    const reviews = Array.from(reviewElements).map((el) => {
+    const reviews = Array.from(reviewElements).map((el: Element) => {
       const rating = el.querySelector('._3LWZlK')?.textContent;
       const title = el.querySelector('p._2-N8zT')?.textContent;
       const review = el.querySelector('div.t-ZTKy div')?.textContent;
@@ -105,9 +105,9 @@ const scrapeGoogleResults = async (product: string) => {
     const links = dom.window.document.querySelectorAll('a');
 
     const results: string[] = [];
-    links.forEach((link) => {
-      const href = link.href;
-      if (href.includes('http') && !href.includes('google.com')) {
+    links.forEach((link: Element) => {
+      const href = (link as HTMLAnchorElement).href;
+      if (href && href.includes('http') && !href.includes('google.com')) {
         results.push(href);
       }
     });
