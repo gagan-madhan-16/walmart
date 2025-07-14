@@ -144,7 +144,7 @@ router.post("/list", async (req, res) => {
     }
 
     // Get the generative model
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Available items for classification
     const products = await db.product.findMany({
