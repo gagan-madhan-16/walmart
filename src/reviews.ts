@@ -5,7 +5,7 @@ import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { createClient } from 'redis';
 
-const app = express();
+const router = express.Router();
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'YOUR_GEMINI_KEY_HERE';
 
 const redis = createClient({
@@ -17,7 +17,6 @@ const redis = createClient({
     }
 });
 
-app.use(cors());
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
@@ -152,7 +151,7 @@ const summarizeReviews = async (reviews: string[]) => {
   }
 };
 
-app.get('/search', async (req, res) => {
+router.post('/search', async (req, res) => {
   const {product} = req.body;
 
   if (!product) return res.status(400).json({ error: 'Missing product parameter' });
@@ -179,4 +178,4 @@ app.get('/search', async (req, res) => {
   return res.json(response);
 });
 
-export default app
+export default router
