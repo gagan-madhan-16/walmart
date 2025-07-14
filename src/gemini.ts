@@ -148,7 +148,9 @@ router.post("/list", async (req, res) => {
     const products = await db.product.findMany({
       select: {
         id: true,
-        name: true
+        name: true,
+        price: true,
+        productUrl: true
       },
       where: { isAvailable: true }
     });
